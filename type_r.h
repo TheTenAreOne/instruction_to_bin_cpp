@@ -1,7 +1,7 @@
 #ifndef TYPE_R
 #define TYPE_R
-
 #include <string>
+#include <iostream>
 class Type_R{
     private:
         std::string opcode;
@@ -16,6 +16,13 @@ class Type_R{
         void convertir( std::string full_inst ); //Main function (all other functions all called from this one)
         void findRegister( std::string reg, int regId ); //Converts register into binary ex: $s1 = 10001 ; regId = 1 for rs, 2 for rt and 3 for rd
         void findFunct( std::string inst ); //Finds the funct value for the specific instruction
+        //Getters
+        std::string getOpcode( );
+        std::string getRs( );
+        std::string getRt( );
+        std::string getRd( );
+        std::string getShamt( );
+        std::string getFunct( );
 };
 
 Type_R::Type_R(){
@@ -77,7 +84,9 @@ void Type_R::convertir( std::string full_inst ){
     //gives this->rt a binary value
     findRegister( rt, 2 );
     //gives this->rd a binary value
-    findRegister( rs, 3 );
+    findRegister( rd, 3 );
+
+
 
     //In sll, srl and sra, rt is the shamdt
     //Also in sll, srl and sra, rt and rd are = 00000
@@ -86,15 +95,18 @@ void Type_R::convertir( std::string full_inst ){
         this->shamt = rt;
         this->rt = "00000";
         this->rd = "00000";
+    }else{
+        this->shamt = "000000";
     }
 
+    findFunct( inst );
 }
 
 void Type_R::findRegister( std::string reg, int regId ){
     
     std::string binReg; //register in binary
 
-    if( reg == "$zero" || "$0" ){
+    if( reg == "$zero" || reg == "$0" ){
         
         binReg = "00000";       //0
 
@@ -313,6 +325,33 @@ void Type_R::findFunct( std::string inst ){
 
     return;
 }
+
+//========== Getters =========================================
+
+std::string Type_R::getOpcode( ){
+    return this->opcode;
+}
+
+std::string Type_R::getRs( ){
+    return this->rs;
+}
+
+std::string Type_R::getRt( ){
+    return this->rt;
+}
+
+std::string Type_R::getRd( ){
+    return this->rd;
+}
+
+std::string Type_R::getShamt( ){
+    return this->shamt;
+}
+
+std::string Type_R::getFunct( ){
+    return this->funct;
+}
+
 
 #endif
 
