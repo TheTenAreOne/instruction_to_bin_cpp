@@ -15,6 +15,7 @@ class Type_R{
         Type_R( std::string full_inst ); //full_inst is full instruction ex: add $s1,$s2,$s3
         void convertir( std::string full_inst ); //Main function (all other functions all called from this one)
         void findRegister( std::string reg, int regId ); //Converts register into binary ex: $s1 = 10001 ; regId = 1 for rs, 2 for rt and 3 for rd
+        void findFunct( std::string inst ); //Finds the funct value for the specific instruction
 };
 
 Type_R::Type_R(){
@@ -70,6 +71,22 @@ void Type_R::convertir( std::string full_inst ){
     }
 
     this->opcode = "000000"; //All R types have opcode = 00000 (6 zeroes)
+
+    //gives this->rs a binary value
+    findRegister( rs, 1 );
+    //gives this->rt a binary value
+    findRegister( rt, 2 );
+    //gives this->rd a binary value
+    findRegister( rs, 3 );
+
+    //In sll, srl and sra, rt is the shamdt
+    //Also in sll, srl and sra, rt and rd are = 00000
+    //Note that rs,rt and rd are different from the mips ref data
+    if( inst == "sll" || inst == "srl" || inst == "sra" ){
+        this->shamt = rt;
+        this->rt = "00000";
+        this->rd = "00000";
+    }
 
 }
 
@@ -213,6 +230,85 @@ void Type_R::findRegister( std::string reg, int regId ){
         this->rt = binReg;
     }else{
         this->rd = binReg;
+    }
+
+    return;
+}
+
+void Type_R::findFunct( std::string inst ){
+    
+    if( inst == "add" ){
+
+        this->funct = "100000";
+
+    }else if( inst == "addu" ){
+
+        this->funct = "100001";
+
+    }else if( inst == "and" ){
+
+        this->funct = "100100";
+        
+    }else if( inst == "jr" ){
+
+        this->funct = "001000";
+        
+    }else if( inst == "nor" ){
+
+        this->funct = "100111";
+        
+    }else if( inst == "or" ){
+
+        this->funct = "100101";
+        
+    }else if( inst == "slt" ){
+
+        this->funct = "101010";
+        
+    }else if( inst == "sltu" ){
+
+        this->funct = "101011";
+        
+    }else if( inst == "sll" ){
+
+        this->funct = "000000";
+        
+    }else if( inst == "srl" ){
+
+        this->funct = "000010";
+        
+    }else if( inst == "sub" ){
+
+        this->funct = "100010";
+        
+    }else if( inst == "subu" ){
+
+        this->funct = "100011";
+        
+    }else if( inst == "mfhi" ){
+
+        this->funct = "010000";
+        
+    }else if( inst == "mflo" ){
+
+        this->funct = "010010";
+        
+    }else if( inst == "mfc0" ){
+
+        this->funct = "000000";
+        
+    }else if( inst == "mult" ){
+
+        this->funct = "011000";
+        
+    }else if( inst == "multu" ){
+
+        this->funct = "011001";
+        
+    }else if( inst == "sra" ){
+
+        this->funct = "000011";
+        
     }
 
     return;
