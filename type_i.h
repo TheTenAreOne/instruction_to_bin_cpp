@@ -1,6 +1,7 @@
 #ifndef TYPE_I
 #define TYPE_I
 #include <string>
+#include <bitset>
 
 class Type_I{
     private:
@@ -79,7 +80,10 @@ void Type_I::convertir( std::string full_inst ){
     //gives this->rt a binary value
     findRegister( rt, 2 );
 
-    findOpcode( inst );
+    findOpcode( inst ); //Finds the opcode for the specific instruction
+    int immediateInt = std::stoi( immediate );
+
+    decToBinary( immediateInt ); //Converts de immediate to binary
 }
 
 
@@ -317,11 +321,7 @@ void Type_I::findOpcode( std::string inst ){
 }
 
 void Type_I::decToBinary( int dec ){
-    if( dec / 2 != 0 ){
-        decToBinary( dec / 2 );
-    }
-    this->immediate += dec % 2;
-    return;
+    this->immediate = std::bitset<16>(dec).to_string();
 }
 
 
